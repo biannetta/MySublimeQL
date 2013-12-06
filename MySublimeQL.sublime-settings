@@ -1,0 +1,12 @@
+{
+    "connections":
+    [
+        {
+            "name": "websuite",
+            "host": "localhost",
+            "user": "websuite",
+            "pass": "w3bsu1t3",
+            "db"  : "websuite"
+        }
+    ]
+}
