@@ -8,5 +8,6 @@
             "pass": "w3bsu1t3",
             "db"  : "websuite"
         }
-    ]
+    ],
+    "default_schema": "websuite"
 }
