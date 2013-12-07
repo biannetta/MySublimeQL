@@ -10,40 +10,39 @@ sys.path.append(directory+"\\MySQLdb\\constants")
 from MySQLdb import *
 from MySQLdb.constants import *
 
-def get_connections():
-	settings = sublime.load_settings('MySublimeQL.sublime-settings')
-	return settings.get('connections')
+class DBManager:
+	def __init__(self):
+		self.settings = sublime.load_settings('MySublimeQL.sublime-settings')
+		self.get_connections()
 
-def connect_to_database(connections, database=None):
-	connection_params = {}
-	if database is None:
-		# Use default schema from settings
-		database = sublime.load_settings('MySublimeQL.sublime-settings').get('default_schema')
+	def get_connections(self):
+		self.connections = self.settings.get('connections')
+		return self.connections
 
-	for connection in connections:
-		if connection.get('name') == database:
-			connection_params = connection
+	def connect_to_database(self, database=None):
+		params = {}
+		if database is None:
+			database = self.settings.get('default_schema')
 
-	host     = connection_params.get('host')
-	user     = connection_params.get('user')
-	passwd   = connection_params.get('pass')
-	database = connection_params.get('db')
+		for connection in self.connections:
+			if connection.get('name') == database:
+				params = connection
 
-	db = connect(host, user, passwd, database)
-	return db.cursor()
-
-cursor = connect_to_database(get_connections())
-cursor.execute("SHOW TABLES")
-data = cursor.fetchall()
-completions = [(x[0],) * 2 for x in data]
+		db = connect(params.get('host'), params.get('user'), params.get('pass'), params.get('db'))
+		return db.cursor()
 
 class SwitchSchemaCommand(sublime_plugin.TextCommand):
 	def run(self, edit):
-		connection_list = []
-		for connection in get_connections():
-			connection_list.append([connection.get('name'), 'Host: ' + connection.get('host')])
+		db = DBManager()
+		self.connection_list = []
+		for connection in db.get_connections():
+			self.connection_list.append([connection.get('name'), 'Host: ' + connection.get('host')])
 		window = sublime.active_window()
-		window.show_quick_panel(connection_list, None)
+		window.show_quick_panel(self.connection_list, self.on_done)
+
+	def on_done(self, picked):
+		if picked >= 0:
+			print self.connection_list[picked]
 
 class MySublimeQL(sublime_plugin.EventListener):
 	def on_modified(self, view):
@@ -57,3 +56,9 @@ class MySublimeQL(sublime_plugin.EventListener):
 	def on_query_completions(self, view, prefix, locations):
 		if view.match_selector(locations[0], "source.sql"):
 			return (completions)
+
+db = DBManager()
+cursor = db.connect_to_database()
+cursor.execute("SHOW TABLES")
+data = cursor.fetchall()
+completions = [(x[0],) * 2 for x in data]
