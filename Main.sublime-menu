@@ -17,6 +17,12 @@
                         [
                             {
                                 "command": "open_file",
+                                "args": {"file": "${packages}/MySublimeQL/README.md"},
+                                "caption": "Help"
+                            },
+                            { "caption": "-" },
+                            {
+                                "command": "open_file",
                                 "args": {"file": "${packages}/MySublimeQL/MySublimeQL.sublime-settings"},
                                 "caption": "Settings – Default"
                             },

@@ -14,6 +14,7 @@ class DBManager:
 	def __init__(self):
 		self.settings = sublime.load_settings('MySublimeQL.sublime-settings')
 		self.get_connections()
+		self.connect_to_database()
 
 	def get_connections(self):
 		self.connections = self.settings.get('connections')
@@ -28,12 +29,22 @@ class DBManager:
 			if connection.get('name') == database:
 				params = connection
 
-		db = connect(params.get('host'), params.get('user'), params.get('pass'), params.get('db'))
-		return db.cursor()
+		self.db = connect(params.get('host'), params.get('user'), params.get('pass'), params.get('db'))
+
+	def query(self, query):
+		cursor = self.db.cursor()
+		cursor.execute(query)
+		return cursor.fetchall()
+
+db = DBManager()
+
+def autocomplete():
+	data = db.query("SHOW TABLES")
+	completions = [(x[0],) * 2 for x in data]
+	return completions
 
 class SwitchSchemaCommand(sublime_plugin.TextCommand):
 	def run(self, edit):
-		db = DBManager()
 		self.connection_list = []
 		for connection in db.get_connections():
 			self.connection_list.append([connection.get('name'), 'Host: ' + connection.get('host')])
@@ -42,7 +53,7 @@ class SwitchSchemaCommand(sublime_plugin.TextCommand):
 
 	def on_done(self, picked):
 		if picked >= 0:
-			print self.connection_list[picked]
+			db.connect_to_database(self.connection_list[picked][0])
 
 class MySublimeQL(sublime_plugin.EventListener):
 	def on_modified(self, view):
@@ -55,10 +66,5 @@ class MySublimeQL(sublime_plugin.EventListener):
 
 	def on_query_completions(self, view, prefix, locations):
 		if view.match_selector(locations[0], "source.sql"):
-			return (completions)
+			return (autocomplete())
 
-db = DBManager()
-cursor = db.connect_to_database()
-cursor.execute("SHOW TABLES")
-data = cursor.fetchall()
-completions = [(x[0],) * 2 for x in data]

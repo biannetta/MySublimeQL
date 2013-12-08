@@ -2,12 +2,12 @@
     "connections":
     [
         {
-            "name": "websuite",
+            "name": "Schema Name",
             "host": "localhost",
-            "user": "websuite",
-            "pass": "w3bsu1t3",
-            "db"  : "websuite"
+            "user": "username",
+            "pass": "password",
+            "db"  : "database"
         }
     ],
-    "default_schema": "websuite"
+    "default_schema": "Schema Name"
 }
