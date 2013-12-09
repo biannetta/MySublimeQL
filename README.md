@@ -13,7 +13,7 @@ Installing
 Using
 =====
 
-Create a new document and set its sytanx to SQL then start typing. A list of table names from the connected schema will start to appear in the autocompletions list.
+Create a new document and set its sytanx to SQL then start typing. A list of table names from the connected schema will start to appear in the autocompletions list. Following SQL conventions, if you type TALBE_NAME followed by a dot (.) autocomplete will display a listing of the columns in the TABLE_NAME.
 
 ###Switching Schemas
 
