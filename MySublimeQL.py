@@ -38,10 +38,17 @@ class DBManager:
 
 db = DBManager()
 
-def autocomplete():
-	data = db.query("SHOW TABLES")
+def autocomplete(show_tables=True, table_name=None):
+	query = ''
+	if show_tables:
+		query = 'SHOW TABLES'
+	else:
+		query = 'DESCRIBE ' + table_name
+	data = db.query(query)
 	completions = [(x[0],) * 2 for x in data]
 	return completions
+
+completions = autocomplete()
 
 class SwitchSchemaCommand(sublime_plugin.TextCommand):
 	def run(self, edit):
@@ -57,14 +64,16 @@ class SwitchSchemaCommand(sublime_plugin.TextCommand):
 
 class MySublimeQL(sublime_plugin.EventListener):
 	def on_modified(self, view):
+		global completions
 		view_sel = view.sel()
 		sel = view_sel[0]
 		pos = sel.end()
 		text = view.substr(sublime.Region(pos - 1, pos))
 		if text == '.' :
-			print view.substr(view.word(pos -1))
+			completions = autocomplete(False, view.substr(view.word(pos -1)))
+		elif text == ' ':
+			completions = autocomplete()
 
 	def on_query_completions(self, view, prefix, locations):
 		if view.match_selector(locations[0], "source.sql"):
-			return (autocomplete())
-
+			return (completions)
