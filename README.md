@@ -1,7 +1,7 @@
 MySublimeQL
 ===========
 
-A Sublime Text 2 plugin to provide autocompletions in SQL scripts using table/column names from a connected database
+A Sublime Text 2 plugin to provide autocompletions in SQL scripts using table/column names from a connected database. MySublimeQL leverages the [MySQLdb Python Module](https://github.com/farcepest/MySQLdb1) to query for completions
 
 Installing
 ==========
@@ -13,7 +13,7 @@ Installing
 Using
 =====
 
-Create a new document and set its sytanx to SQL then start typing. A list of table names from the connected schema will start to appear in the autocompletions list.
+Create a new document and set its sytanx to SQL then start typing. A list of table names from the connected schema will start to appear in the autocompletions list. Following SQL conventions, if you type TALBE_NAME followed by a dot (.) autocomplete will display a listing of the columns in the TABLE_NAME.
 
 ###Switching Schemas
 
