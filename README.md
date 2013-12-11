@@ -1,7 +1,7 @@
 MySublimeQL
 ===========
 
-A Sublime Text 2 plugin to provide autocompletions in SQL scripts using table/column names from a connected database
+A Sublime Text 2 plugin to provide autocompletions in SQL scripts using table/column names from a connected database. MySublimeQL leverages the [MySQLdb Python Module](https://github.com/farcepest/MySQLdb1) to query for completions
 
 Installing
 ==========
