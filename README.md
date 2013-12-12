@@ -5,6 +5,7 @@ A Sublime Text 2 plugin to provide autocompletions in SQL scripts using table/co
 
 Installing
 ==========
+**With Package Control** If you have [Package Control](http://wbond.net/sublime_packages/package_control) installed you can install via the Install Package option.
 
 **With Git:** Clone this repository into the ST2 Package folder
 
