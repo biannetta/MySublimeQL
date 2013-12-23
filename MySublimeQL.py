@@ -40,7 +40,7 @@ db = DBManager()
 
 def autocomplete(show_tables=True, table_name=None):
 	query = ''
-	if show_tables:
+	if show_tables or table_name == '':
 		query = 'SHOW TABLES'
 	else:
 		query = 'DESCRIBE ' + table_name
@@ -59,8 +59,10 @@ class SwitchSchemaCommand(sublime_plugin.TextCommand):
 		window.show_quick_panel(self.connection_list, self.on_done)
 
 	def on_done(self, picked):
+		global completions
 		if picked >= 0:
 			db.connect_to_database(self.connection_list[picked][0])
+			completions = autocomplete()
 
 class MySublimeQL(sublime_plugin.EventListener):
 	def on_modified(self, view):
@@ -70,7 +72,8 @@ class MySublimeQL(sublime_plugin.EventListener):
 		pos = sel.end()
 		text = view.substr(sublime.Region(pos - 1, pos))
 		if text == '.' :
-			completions = autocomplete(False, view.substr(view.word(pos -1)))
+			table_name = view.substr(view.word(pos -1))
+			completions = autocomplete(False, table_name)
 		elif text == ' ':
 			completions = autocomplete()
 
